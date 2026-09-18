@@ -35,6 +35,6 @@ class Tiktok::VideosController < Tiktok::ApplicationController
   end
 
   def video_params
-    params.require(:tiktok_video).permit(:file, :caption, :overlay_text, :privacy_level)
+    params.require(:tiktok_video).permit(:file, :caption, :overlay_text, :overlay_style, :overlay_position, :privacy_level)
   end
 end

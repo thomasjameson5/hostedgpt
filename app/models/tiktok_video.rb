@@ -1,6 +1,8 @@
 class TiktokVideo < ApplicationRecord
   PRIVACY_LEVELS = %w[PUBLIC_TO_EVERYONE MUTUAL_FOLLOW_FRIENDS FOLLOWER_OF_CREATOR SELF_ONLY]
   STATUSES = %w[pending processing publishing posted failed]
+  OVERLAY_STYLES = Tiktok::VideoOverlay::STYLES.keys
+  OVERLAY_POSITIONS = Tiktok::VideoOverlay::POSITIONS.keys
 
   belongs_to :user
   belongs_to :tiktok_credential, optional: true
@@ -12,6 +14,8 @@ class TiktokVideo < ApplicationRecord
 
   validates :privacy_level, inclusion: {in: PRIVACY_LEVELS}
   validates :status, inclusion: {in: STATUSES}
+  validates :overlay_style, inclusion: {in: OVERLAY_STYLES}
+  validates :overlay_position, inclusion: {in: OVERLAY_POSITIONS}
   validate :file_present
 
   def posted?

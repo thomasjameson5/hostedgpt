@@ -1,4 +1,5 @@
 require "test_helper"
+require "tmpdir"
 
 class Zernio::VideoPublisherTest < ActiveSupport::TestCase
   class FakeZernio
@@ -58,6 +59,22 @@ class Zernio::VideoPublisherTest < ActiveSupport::TestCase
     refute result
     assert_equal "failed", @video.reload.status
     assert_match "didn't return a post id", @video.error_message
+  end
+
+  test "burns overlay text onto the video in the chosen style/position before publishing" do
+    Dir.mktmpdir do |dir|
+      source_path = File.join(dir, "source.mp4")
+      system("ffmpeg", "-y", "-f", "lavfi", "-i", "color=c=blue:s=320x240:d=1", "-pix_fmt", "yuv420p", source_path,
+        out: File::NULL, err: File::NULL, exception: true)
+
+      @video.file.attach(io: File.open(source_path), filename: "video.mp4", content_type: "video/mp4")
+      @video.update!(overlay_text: "50% off!", overlay_style: "highlight", overlay_position: "top")
+
+      result = Zernio::VideoPublisher.new(@video, zernio: @fake_zernio).publish!
+
+      assert result
+      assert_equal "posted", @video.reload.status
+    end
   end
 
   test "marks the video failed when Zernio raises" do
