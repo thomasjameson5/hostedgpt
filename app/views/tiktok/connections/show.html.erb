@@ -19,7 +19,7 @@
     </div>
   <% else %>
     <p class="mb-3 text-gray-600 dark:text-gray-300">Not connected yet.</p>
-    <%= button_to "Connect TikTok account", tiktok_connections_content_authorize_path, method: :get,
+    <%= link_to "Connect TikTok account", tiktok_connections_content_authorize_path, data: { turbo: false },
       class: "inline-block font-bold bg-gray-200 dark:bg-gray-900 border border-gray-400 rounded-lg py-3 px-5 cursor-pointer" %>
   <% end %>
 </div>
@@ -63,7 +63,7 @@
     <% end %>
   <% else %>
     <p class="mb-3 text-gray-600 dark:text-gray-300">Not connected yet.</p>
-    <%= button_to "Connect TikTok Ads account", tiktok_connections_ads_authorize_path, method: :get,
+    <%= link_to "Connect TikTok Ads account", tiktok_connections_ads_authorize_path, data: { turbo: false },
       class: "inline-block font-bold bg-gray-200 dark:bg-gray-900 border border-gray-400 rounded-lg py-3 px-5 cursor-pointer" %>
   <% end %>
 </div>
