@@ -1,0 +1,55 @@
+<% content_for :title, "TikTok — #{Setting.product_name}" %>
+<% content_for :nav_column do %>
+  <header class="pl-2 py-7 text-3xl relative">
+    <%= link_to root_path, class: "inline-block cursor-pointer py-1 pt-0 align-middle" do %>
+      <%= icon "chevron-left",
+            variant: :outline,
+            size: 22,
+            class: %|
+              stroke-2
+              text-zinc-600 group-hover:text-zinc-900 dark:text-zinc-400 dark:group-hover:text-white
+            |,
+            title: "Home",
+            tooltip: :bottom
+      %>
+    <% end %>
+    TikTok
+  </header>
+  <section id="menu" class="flex flex-col gap-1 px-2 text-sm">
+    <%= link_to "Videos", tiktok_videos_path, class: "block rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 #{"font-semibold bg-gray-100 dark:bg-gray-700" if controller_name == "videos"}" %>
+    <%= link_to "Ad campaigns", tiktok_campaigns_path, class: "block rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 #{"font-semibold bg-gray-100 dark:bg-gray-700" if controller_name == "campaigns"}" %>
+    <%= link_to "Connected accounts", tiktok_connections_path, class: "block rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 #{"font-semibold bg-gray-100 dark:bg-gray-700" if controller_name == "connections"}" %>
+  </section>
+<% end %>
+
+<% content_for :main do %>
+  <header class="absolute right-0 ml-2 mt-2 mb-3 h-10 text-lg">
+    <%= link_to root_path,
+      data: {
+        controller: "keyboard",
+        action: "keydown.esc@document->keyboard#click"
+      },
+      class: %|
+        block cursor-pointer inline-flex mr-3 px-2 py-2 group
+      | do %>
+      <%= icon "x-mark",
+        variant: :outline,
+        size: 22,
+        class: %|
+          stroke-2
+          text-zinc-600 group-hover:text-zinc-900 dark:text-zinc-400 dark:group-hover:text-white
+        |,
+        title: "Close",
+        tooltip: :left
+      %>
+    <% end %>
+  </header>
+
+  <section class="flex flex-col flex-grow overflow-y-auto overflow-x-clip">
+    <div class="w-full md:max-w-none lg:max-w-[700px] xl:max-w-[810px] mx-auto mt-2 py-7 px-10 pr-14">
+      <%= yield %>
+    </div>
+  </section>
+<% end %>
+
+<%= render template: "layouts/application" %>

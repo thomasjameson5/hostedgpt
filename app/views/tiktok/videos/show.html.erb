@@ -1,0 +1,44 @@
+<% if %w[pending processing publishing].include?(@video.status) %>
+  <meta http-equiv="refresh" content="4">
+<% end %>
+
+<h1 class="text-3xl">Video</h1>
+
+<div class="my-5">
+  <%= render "tiktok/videos/status_badge", video: @video %>
+</div>
+
+<% if @video.status == "failed" && @video.error_message.present? %>
+  <div class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3 mb-5">
+    <%= @video.error_message %>
+  </div>
+<% end %>
+
+<% if @video.file.attached? %>
+  <video controls class="max-w-sm rounded-lg my-5">
+    <source src="<%= rails_blob_path(@video.file, only_path: true) %>">
+  </video>
+<% end %>
+
+<dl class="my-5 space-y-2">
+  <div><dt class="inline font-semibold">Caption:</dt> <dd class="inline"><%= @video.caption.presence || "(none)" %></dd></div>
+  <div><dt class="inline font-semibold">Overlay text:</dt> <dd class="inline"><%= @video.overlay_text.presence || "(none)" %></dd></div>
+  <div><dt class="inline font-semibold">Privacy:</dt> <dd class="inline"><%= @video.privacy_level.titleize %></dd></div>
+  <% if @video.tiktok_item_id.present? %>
+    <div><dt class="inline font-semibold">TikTok item id:</dt> <dd class="inline"><%= @video.tiktok_item_id %></dd></div>
+  <% end %>
+  <% if @video.ready_for_ads? %>
+    <div><dt class="inline font-semibold">Ready for ads:</dt> <dd class="inline">Yes - this video can be used as ad creative</dd></div>
+  <% end %>
+</dl>
+
+<div class="flex gap-3">
+  <%= link_to "Back to videos", tiktok_videos_path, class: "font-bold border border-gray-400 rounded-lg py-2 px-4 cursor-pointer" %>
+  <% if @video.posted? %>
+    <%= link_to "Create an ad campaign with this video", new_tiktok_campaign_path(video_id: @video.id),
+      class: "font-bold bg-gray-200 dark:bg-gray-900 border border-gray-400 rounded-lg py-2 px-4 cursor-pointer" %>
+  <% end %>
+  <%= button_to "Delete", tiktok_video_path(@video), method: :delete,
+    class: "font-bold border border-gray-400 rounded-lg py-2 px-4 cursor-pointer",
+    form: { data: { turbo_confirm: "Are you sure?" } } %>
+</div>

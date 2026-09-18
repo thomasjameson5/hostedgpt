@@ -1,0 +1,5 @@
+<h1 class="text-3xl">Campaign settings</h1>
+<%= render "tiktok/campaigns/steps", campaign: @campaign, current_step: :settings %>
+
+<%= render "tiktok/campaigns/settings_form", campaign: @campaign, ad_accounts: @ad_accounts,
+  url: tiktok_campaign_path(@campaign), method: :patch, video_id: nil %>

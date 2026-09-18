@@ -1,0 +1,20 @@
+<%
+  steps = [
+    ["Settings", campaign.persisted? ? edit_tiktok_campaign_path(campaign) : new_tiktok_campaign_path, :settings],
+    ["Audience", campaign.persisted? ? audience_tiktok_campaign_path(campaign) : nil, :audience],
+    ["Creative", campaign.persisted? ? creative_tiktok_campaign_path(campaign) : nil, :creative],
+    ["Review & launch", campaign.persisted? ? review_tiktok_campaign_path(campaign) : nil, :review],
+  ]
+%>
+<ol class="flex gap-2 flex-wrap mb-8 text-sm">
+  <% steps.each_with_index do |(label, path, key), index| %>
+    <li class="flex items-center gap-2">
+      <% if path && key != current_step %>
+        <%= link_to label, path, class: "underline text-blue-600" %>
+      <% else %>
+        <span class="<%= "font-bold" if key == current_step %>"><%= label %></span>
+      <% end %>
+      <%= "→" unless index == steps.length - 1 %>
+    </li>
+  <% end %>
+</ol>

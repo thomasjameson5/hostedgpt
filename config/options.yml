@@ -38,6 +38,7 @@ shared:
     default_llm_keys: <%= ENV["DEFAULT_LLM_KEYS_FEATURE"] || false %>
     cloudflare_storage: <%= ENV["CLOUDFLARE_STORAGE_FEATURE"] || false %>
     google_tools: <%= ENV["GOOGLE_TOOLS_FEATURE"] || false %>
+    tiktok_tools: <%= ENV["TIKTOK_TOOLS_FEATURE"] || false %>
     password_authentication: <%= ENV["PASSWORD_AUTHENTICATION_FEATURE"] || true %>
     google_authentication: <%= ENV["GOOGLE_AUTHENTICATION_FEATURE"] || false %>
     http_header_authentication: <%= ENV["HTTP_HEADER_AUTHENTICATION_FEATURE"] || false %>
@@ -57,6 +58,10 @@ shared:
     cloudflare_bucket: <%= ENV["CLOUDFLARE_BUCKET"] || default_to(cloudflare: :bucket) %>
     google_auth_client_id: <%= ENV["GOOGLE_AUTH_CLIENT_ID"] || default_to(:google_auth_client_id) %>
     google_auth_client_secret: <%= ENV["GOOGLE_AUTH_CLIENT_SECRET"] || default_to(:google_auth_client_secret) %>
+    tiktok_client_key: <%= ENV["TIKTOK_CLIENT_KEY"] || default_to(:tiktok_client_key) %>
+    tiktok_client_secret: <%= ENV["TIKTOK_CLIENT_SECRET"] || default_to(:tiktok_client_secret) %>
+    tiktok_marketing_app_id: <%= ENV["TIKTOK_MARKETING_APP_ID"] || default_to(:tiktok_marketing_app_id) %>
+    tiktok_marketing_app_secret: <%= ENV["TIKTOK_MARKETING_APP_SECRET"] || default_to(:tiktok_marketing_app_secret) %>
     http_header_auth_email: <%= ENV["HTTP_HEADER_AUTH_EMAIL"] || "X-WEBAUTH-EMAIL" %>
     http_header_auth_name: <%= ENV["HTTP_HEADER_AUTH_NAME"] || "X-WEBAUTH-NAME" %>
     http_header_auth_uid: <%= ENV["HTTP_HEADER_AUTH_UID"] || "X-WEBAUTH-USER" %>

@@ -1,0 +1,38 @@
+<% if @campaign.status == "launching" %>
+  <meta http-equiv="refresh" content="4">
+<% end %>
+
+<h1 class="text-3xl"><%= @campaign.name %></h1>
+
+<div class="my-5"><%= render "tiktok/campaigns/status_badge", record: @campaign %></div>
+
+<% if @campaign.status == "failed" && @campaign.error_message.present? %>
+  <div class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3 mb-5">
+    <%= @campaign.error_message %>
+  </div>
+<% end %>
+
+<dl class="my-5 space-y-2 text-sm">
+  <div><dt class="inline font-semibold">Ad account:</dt> <dd class="inline"><%= @campaign.tiktok_ad_account.name %></dd></div>
+  <div><dt class="inline font-semibold">Objective:</dt> <dd class="inline"><%= @campaign.objective_type.titleize %></dd></div>
+  <div><dt class="inline font-semibold">Budget:</dt> <dd class="inline"><%= number_to_currency(@campaign.budget) %></dd></div>
+  <% if @campaign.tiktok_campaign_id.present? %>
+    <div><dt class="inline font-semibold">TikTok campaign id:</dt> <dd class="inline"><%= @campaign.tiktok_campaign_id %></dd></div>
+  <% end %>
+  <% if @campaign.tiktok_ad_group&.tiktok_adgroup_id.present? %>
+    <div><dt class="inline font-semibold">TikTok ad group id:</dt> <dd class="inline"><%= @campaign.tiktok_ad_group.tiktok_adgroup_id %></dd></div>
+  <% end %>
+  <% if @campaign.tiktok_ad_group&.tiktok_ad&.tiktok_ad_id.present? %>
+    <div><dt class="inline font-semibold">TikTok ad id:</dt> <dd class="inline"><%= @campaign.tiktok_ad_group.tiktok_ad.tiktok_ad_id %></dd></div>
+  <% end %>
+</dl>
+
+<div class="flex gap-3">
+  <%= link_to "Back to campaigns", tiktok_campaigns_path, class: "font-bold border border-gray-400 rounded-lg py-2 px-4 cursor-pointer" %>
+  <% unless @campaign.launched? %>
+    <%= link_to "Continue editing", review_tiktok_campaign_path(@campaign), class: "font-bold bg-gray-200 dark:bg-gray-900 border border-gray-400 rounded-lg py-2 px-4 cursor-pointer" %>
+  <% end %>
+  <%= button_to "Delete", tiktok_campaign_path(@campaign), method: :delete,
+    class: "font-bold border border-gray-400 rounded-lg py-2 px-4 cursor-pointer",
+    form: { data: { turbo_confirm: "Are you sure?" } } %>
+</div>

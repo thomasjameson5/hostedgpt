@@ -1,0 +1,9 @@
+<h1 class="text-3xl">New ad campaign</h1>
+<%= render "tiktok/campaigns/steps", campaign: @campaign, current_step: :settings %>
+
+<% if @video_id.present? %>
+  <p class="mb-5 text-sm text-gray-500">Using the video you just uploaded as the ad creative.</p>
+<% end %>
+
+<%= render "tiktok/campaigns/settings_form", campaign: @campaign, ad_accounts: @ad_accounts,
+  url: tiktok_campaigns_path, method: :post, video_id: @video_id %>

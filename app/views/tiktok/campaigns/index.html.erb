@@ -1,0 +1,39 @@
+<h1 class="text-3xl">Ad campaigns</h1>
+
+<p class="my-8">
+  <%= link_to "New campaign", new_tiktok_campaign_path,
+    class: "inline-block font-bold bg-gray-200 dark:bg-gray-900 border border-gray-400 rounded-lg py-3 px-5 cursor-pointer" %>
+</p>
+
+<% if @campaigns.empty? %>
+  <p class="my-8">You haven't built a campaign yet.</p>
+<% else %>
+  <table class="w-full table-auto border-b border-gray-300 dark:border-b-0">
+    <thead>
+      <tr class="bg-gray-200 dark:bg-gray-900">
+        <th>Name</th>
+        <th>Ad account</th>
+        <th>Objective</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @campaigns.each do |campaign| %>
+        <tr class="<%= cycle("bg-gray-100 dark:bg-gray-600", "bg-white dark:bg-gray-900") %> cursor-pointer" data-href="<%= tiktok_campaign_path(campaign) %>">
+          <td><%= campaign.name %></td>
+          <td><%= campaign.tiktok_ad_account.name %></td>
+          <td><%= campaign.objective_type.titleize %></td>
+          <td><%= render "tiktok/campaigns/status_badge", record: campaign %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <script>
+    document.addEventListener("turbo:load", () => {
+      document.querySelectorAll("table tr[data-href]").forEach(row => {
+        row.addEventListener("click", () => { window.location.href = row.dataset.href; });
+      });
+    });
+  </script>
+<% end %>
