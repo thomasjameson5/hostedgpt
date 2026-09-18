@@ -63,7 +63,7 @@ FROM base-for-fly AS fly-production
 RUN --mount=type=cache,id=dev-apt-cache,sharing=locked,target=/var/cache/apt \
     --mount=type=cache,id=dev-apt-lib,sharing=locked,target=/var/lib/apt \
     apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl imagemagick libvips postgresql-client ffmpeg
+    apt-get install --no-install-recommends -y curl imagemagick libvips postgresql-client ffmpeg fonts-dejavu-core
 
 # Copy built artifacts: gems, application
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
@@ -91,7 +91,7 @@ EXPOSE 3000
 # RUBY_VERSION is the only thing used from anything above
 FROM ruby:${RUBY_VERSION}-alpine AS development
 
-RUN apk add --no-cache bash git build-base postgresql-dev curl-dev gcompat tzdata vips-dev imagemagick ffmpeg
+RUN apk add --no-cache bash git build-base postgresql-dev curl-dev gcompat tzdata vips-dev imagemagick ffmpeg ttf-dejavu
 
 ENV BUNDLE_CACHE=/tmp/bundle \
   BUNDLE_JOBS=2 \
@@ -115,7 +115,7 @@ CMD ["./bin/dev"]
 # RUBY_VERSION is the only thing used from anything above
 FROM ruby:${RUBY_VERSION}-alpine AS render-production
 
-RUN apk add --no-cache git build-base postgresql-dev curl-dev gcompat tzdata vips-dev imagemagick ffmpeg
+RUN apk add --no-cache git build-base postgresql-dev curl-dev gcompat tzdata vips-dev imagemagick ffmpeg ttf-dejavu
 
 WORKDIR /rails
 COPY Gemfile Gemfile.lock .ruby-version ./

@@ -51,7 +51,10 @@ class Zernio::VideoPublisher
     File.binwrite(source_path, video.file.download)
 
     output_path = File.join(Dir.tmpdir, "zernio_overlay_#{video.id}_#{SecureRandom.hex(4)}.mp4")
-    Tiktok::VideoOverlay.new(input_path: source_path, output_path: output_path, text: video.overlay_text).call
+    Tiktok::VideoOverlay.new(
+      input_path: source_path, output_path: output_path, text: video.overlay_text,
+      style: video.overlay_style, position: video.overlay_position
+    ).call
 
     video.file.attach(
       io: File.open(output_path),

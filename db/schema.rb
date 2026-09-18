@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_09_18_135808) do
+ActiveRecord::Schema[7.1].define(version: 2026_09_18_143654) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -497,6 +497,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_18_135808) do
     t.text "error_message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "overlay_style", default: "classic", null: false
+    t.string "overlay_position", default: "bottom", null: false
     t.index ["tiktok_credential_id"], name: "index_tiktok_videos_on_tiktok_credential_id"
     t.index ["user_id"], name: "index_tiktok_videos_on_user_id"
   end

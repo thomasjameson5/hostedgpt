@@ -23,6 +23,9 @@
 <dl class="my-5 space-y-2">
   <div><dt class="inline font-semibold">Caption:</dt> <dd class="inline"><%= @video.caption.presence || "(none)" %></dd></div>
   <div><dt class="inline font-semibold">Overlay text:</dt> <dd class="inline"><%= @video.overlay_text.presence || "(none)" %></dd></div>
+  <% if @video.overlay_text.present? %>
+    <div><dt class="inline font-semibold">Overlay style:</dt> <dd class="inline"><%= @video.overlay_style.titleize %>, <%= @video.overlay_position %></dd></div>
+  <% end %>
   <div><dt class="inline font-semibold">Privacy:</dt> <dd class="inline"><%= @video.privacy_level.titleize %></dd></div>
   <% if @video.tiktok_item_id.present? %>
     <div><dt class="inline font-semibold">TikTok item id:</dt> <dd class="inline"><%= @video.tiktok_item_id %></dd></div>

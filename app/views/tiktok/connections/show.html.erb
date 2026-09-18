@@ -14,25 +14,31 @@
   </div>
 <% end %>
 
-<% if @accounts.present? %>
-  <table class="w-full table-auto border-b border-gray-300 dark:border-b-0">
-    <thead>
-      <tr class="bg-gray-200 dark:bg-gray-900">
-        <th>Account</th>
-        <th>Platform</th>
-        <th>Zernio account ID</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @accounts.each do |account| %>
-        <tr class="<%= cycle("bg-gray-100 dark:bg-gray-600", "bg-white dark:bg-gray-900") %>">
-          <td><%= account["username"] || account["name"] || "(unnamed)" %></td>
-          <td><%= account["platform"] %></td>
-          <td class="font-mono text-sm"><%= account["_id"] || account["id"] %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% elsif @accounts_error.blank? %>
-  <p class="text-gray-500">No TikTok accounts connected in Zernio yet.</p>
+<% if @accounts_error.blank? %>
+  <section class="my-8">
+    <h2 class="text-xl font-bold mb-2">Posting account</h2>
+    <p class="text-sm text-gray-500 mb-3">Videos you upload here get posted to this TikTok account.</p>
+
+    <% if @posting_accounts.present? %>
+      <%= render "tiktok/connections/accounts_table", accounts: @posting_accounts %>
+    <% else %>
+      <p class="text-gray-500">No TikTok posting account connected in Zernio yet.</p>
+    <% end %>
+  </section>
+
+  <section class="my-8">
+    <h2 class="text-xl font-bold mb-2">Ads / Business Center account</h2>
+    <p class="text-sm text-gray-500 mb-3">Ad campaigns you launch here run through this TikTok Ads / Business Center account.</p>
+
+    <% if @ads_accounts.present? %>
+      <%= render "tiktok/connections/accounts_table", accounts: @ads_accounts %>
+    <% else %>
+      <div class="bg-yellow-50 text-yellow-800 px-3 py-2 rounded-lg">
+        No TikTok Ads / Business Center account connected yet - launching a campaign will fail until you connect one.
+        On <%= link_to "your Zernio dashboard", "https://zernio.com/dashboard", target: "_blank", class: "underline" %>,
+        add a new account and choose the TikTok Ads / Business Center option (as opposed to the regular TikTok posting
+        connection above) - it'll show up in this section automatically once connected.
+      </div>
+    <% end %>
+  </section>
 <% end %>

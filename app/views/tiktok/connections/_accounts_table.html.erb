@@ -1,0 +1,18 @@
+<table class="w-full table-auto border-b border-gray-300 dark:border-b-0">
+  <thead>
+    <tr class="bg-gray-200 dark:bg-gray-900">
+      <th>Account</th>
+      <th>Platform</th>
+      <th>Zernio account ID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% accounts.each do |account| %>
+      <tr class="<%= cycle("bg-gray-100 dark:bg-gray-600", "bg-white dark:bg-gray-900") %>">
+        <td><%= account["username"] || account["name"] || "(unnamed)" %></td>
+        <td><%= account["platform"] %></td>
+        <td class="font-mono text-sm"><%= account["_id"] || account["id"] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

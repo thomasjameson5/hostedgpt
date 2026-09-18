@@ -27,6 +27,21 @@
     <%= form.text_field :overlay_text, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
   </div>
 
+  <div class="my-5 grid grid-cols-2 gap-3">
+    <div>
+      <%= form.label :overlay_style, "Text style" %>
+      <%= form.select :overlay_style,
+        [["Classic (white, outlined)", "classic"], ["Bold (black box)", "bold"], ["Highlight (yellow box)", "highlight"], ["Neon outline", "neon"]],
+        {},
+        class: "block border border-gray-200 outline-none shadow rounded-md px-3 py-2 mt-2 w-full dark:text-black" %>
+    </div>
+    <div>
+      <%= form.label :overlay_position, "Text position" %>
+      <%= form.select :overlay_position, [["Top", "top"], ["Middle", "middle"], ["Bottom", "bottom"]], {},
+        class: "block border border-gray-200 outline-none shadow rounded-md px-3 py-2 mt-2 w-full dark:text-black" %>
+    </div>
+  </div>
+
   <div class="my-5">
     <%= form.label :caption, "Caption" %>
     <%= form.text_area :caption, rows: 3, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
