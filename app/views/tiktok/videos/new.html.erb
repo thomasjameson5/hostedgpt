@@ -1,0 +1,44 @@
+<h1 class="text-3xl">Upload a video</h1>
+
+<p class="my-5 text-gray-600 dark:text-gray-300">
+  Uploading to <strong>@<%= Current.user.tiktok_credential.username || Current.user.tiktok_credential.display_name %></strong>.
+  If you type overlay text it will be burned onto the video itself; the caption is TikTok's normal post description.
+</p>
+
+<%= form_with model: @video, url: tiktok_videos_path, multipart: true, class: "contents", local: true do |form| %>
+  <% if @video.errors.any? %>
+    <div class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
+      <ul>
+        <% @video.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :file, "Video file" %>
+    <%= form.file_field :file, accept: "video/mp4,video/quicktime", class: "block mt-2" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :overlay_text, "Text to draw on the video (optional)" %>
+    <%= form.text_field :overlay_text, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :caption, "Caption" %>
+    <%= form.text_area :caption, rows: 3, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :privacy_level, "Who can see it on TikTok" %>
+    <%= form.select :privacy_level, TiktokVideo::PRIVACY_LEVELS.map { |l| [l.titleize, l] }, {},
+      class: "block border border-gray-200 outline-none shadow rounded-md px-3 py-2 mt-2 w-full dark:text-black" %>
+    <p class="text-sm text-gray-500 mt-1">Until your TikTok developer app is audited, TikTok restricts posts to "Self Only".</p>
+  </div>
+
+  <%= form.submit "Upload to TikTok",
+    class: "inline-block font-bold bg-gray-200 dark:bg-gray-900 border border-gray-400 rounded-lg py-3 px-5 cursor-pointer",
+    data: { turbo_submits_with: "Uploading..." } %>
+<% end %>

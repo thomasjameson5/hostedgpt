@@ -1,0 +1,46 @@
+<% if campaign.errors.any? %>
+  <div class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3 mb-3">
+    <ul>
+      <% campaign.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: campaign, url: url, method: method, class: "contents", local: true do |form| %>
+  <%= hidden_field_tag :video_id, video_id if video_id.present? %>
+
+  <div class="my-5">
+    <%= form.label :tiktok_ad_account_id, "TikTok Ads account" %>
+    <%= form.collection_select :tiktok_ad_account_id, ad_accounts, :id, :name, {},
+      class: "block border border-gray-200 outline-none shadow rounded-md px-3 py-2 mt-2 w-full dark:text-black" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :name, "Campaign name" %>
+    <%= form.text_field :name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :objective_type, "Objective" %>
+    <%= form.select :objective_type, TiktokCampaign::OBJECTIVE_TYPES.map { |o| [o.titleize, o] }, {},
+      class: "block border border-gray-200 outline-none shadow rounded-md px-3 py-2 mt-2 w-full dark:text-black" %>
+    <p class="text-sm text-gray-500 mt-1">Choose "Lead Generation" to use an Instant Form.</p>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :budget_mode, "Budget type" %>
+    <%= form.select :budget_mode, TiktokCampaign::BUDGET_MODES.map { |o| [o.titleize, o] }, {},
+      class: "block border border-gray-200 outline-none shadow rounded-md px-3 py-2 mt-2 w-full dark:text-black" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :budget, "Campaign budget ($)" %>
+    <%= form.number_field :budget, step: "0.01", min: "0", class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
+  </div>
+
+  <%= form.submit "Continue",
+    class: "inline-block font-bold bg-gray-200 dark:bg-gray-900 border border-gray-400 rounded-lg py-3 px-5 cursor-pointer",
+    data: { turbo_submits_with: "Saving..." } %>
+<% end %>

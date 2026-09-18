@@ -30,6 +30,7 @@ This project is led by an experienced rails developer, but I'm actively looking 
 - [Deploy on your own server](#deploy-on-your-own-server)
 - [Configure optional features](#configure-optional-features)
   - [Give assistant access to your Google apps](#configuring-google-tools)
+  - [Upload TikTok videos and run TikTok ad campaigns](#configuring-tiktok-tools)
   - [Authentication](#authentication)
     - [Password authentication](#password-authentication)
     - [Google OAuth authentication](#google-oauth-authentication)
@@ -168,6 +169,7 @@ There are a number of optional feature flags that can be set and settings that c
   - `CLOUDFLARE_SECRET_ACCESS_KEY` - Your Cloudflare Secret Access Key
   - `CLOUDFLARE_BUCKET` - The name of the bucket you created
 - `GOOGLE_TOOLS_FEATURE` is `false` by default because this feature is still in development. Set this to `true` if you would like to try the experimental feature where your assistant can access your Gmail, Google Tasks, and soon Google Calendar. After enabling, you need to set up Google OAuth and include the apps as part of the consent flow. See [Configure Google Tools](#configuring-google-tools). After this is done, when each user goes to Settings within the app, there will be a button to explicitly connect their account to Gmail, Google Tasks, and/or Google Calendar. Review `gmail.rb` and `google_tasks.rb` in the directory `app/services/toolbox/` to see what capabilities have currently been built.
+- `TIKTOK_TOOLS_FEATURE` is `false` by default. Set this to `true` to enable the TikTok video + ad campaign wizard: upload a video (optionally burning text onto it with ffmpeg), post it to a connected TikTok account, then build and launch a TikTok ad campaign (audience, creative, Instant Form, and the "card"/Identity the ad runs as). See [Configure TikTok Tools](#configuring-tiktok-tools).
 - `VOICE_FEATURE` is `false` by default. This is an experimental feature to have spoken conversation with your assistant. It's still a bit buggy but it's coming along.
 - `PASSWORD_AUTHENTICATION_FEATURE` is `true` by default, see the [Authentication](#authentication) section for more details.
 - `GOOGLE_AUTHENTICATION_FEATURE` is `false` by default, see the [Authentication](#authentication) section for more details.
@@ -186,6 +188,33 @@ You first need to follow all the steps in the [Google OAuth instructions](#googl
      - https://www.googleapis.com/auth/tasks (then click "Add To Table")
 
 2. **Finally, set `GOOGLE_TOOLS_FEATURE` to true**
+
+### Configuring TikTok Tools
+
+TikTok treats posting videos and running ads as two entirely separate products, each requiring its own developer app, its own approval process, and its own OAuth credentials. **Neither app is approved by default** - you have to register both with TikTok and wait for their review before this feature does anything real. Until then the UI works but every TikTok API call will fail.
+
+1. **Content Posting API app** (posts a video to a connected TikTok account):
+
+   - Create an app at [TikTok for Developers](https://developers.tiktok.com/) and request the `user.info.basic`, `video.upload`, and `video.publish` scopes under "Login Kit" / "Content Posting API".
+   - Add a redirect URI of `https://your-domain.com/tiktok/connections/content/callback`.
+   - Until TikTok audits your app, videos posted through it are restricted to "Only Me" visibility (`SELF_ONLY`) - that's why it's the default privacy level in the upload form.
+   - Set the environment variables:
+     - `TIKTOK_CLIENT_KEY` - your app's Client Key
+     - `TIKTOK_CLIENT_SECRET` - your app's Client Secret
+
+2. **Marketing API app** (builds and launches ad campaigns):
+
+   - Register a developer app at [TikTok for Business](https://business-api.tiktok.com/portal) and request Marketing API access for the advertiser account(s) you want to manage. This is a separate approval process from the Content Posting API above and can take longer.
+   - Add a redirect URI of `https://your-domain.com/tiktok/connections/ads/callback`.
+   - Set the environment variables:
+     - `TIKTOK_MARKETING_APP_ID` - your app's App ID
+     - `TIKTOK_MARKETING_APP_SECRET` - your app's App Secret
+
+3. **Install ffmpeg** if you're not using the provided Docker images - it's what burns overlay text onto a video before it's uploaded (the TikTok APIs only support a caption, not drawing on the video itself).
+
+4. **Set `TIKTOK_TOOLS_FEATURE` to `true`.** Each user then connects their TikTok account and TikTok Ads account from the "TikTok" link in the profile menu before they can upload a video or build a campaign.
+
+**A note on the ad campaign wizard:** it was built without live TikTok Marketing API access (outbound access to TikTok's domains wasn't available while building it), so the request payloads in `app/services/tiktok/marketing_api.rb` reflect the publicly documented v1.3 API shape but haven't been verified against a real account. Before launching real campaigns, diff those requests against the current docs at [business-api.tiktok.com/portal/docs](https://business-api.tiktok.com/portal/docs) - TikTok does revise field names across API versions. Launching a campaign spends real ad budget, so the review step always requires an explicit confirmation click before anything is sent to TikTok.
 
 ### Authentication
 

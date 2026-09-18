@@ -1,0 +1,12 @@
+<%
+  colors = {
+    "pending" => "bg-gray-200 text-gray-800",
+    "processing" => "bg-yellow-100 text-yellow-800",
+    "publishing" => "bg-yellow-100 text-yellow-800",
+    "posted" => "bg-green-100 text-green-800",
+    "failed" => "bg-red-100 text-red-800",
+  }
+%>
+<span class="inline-block rounded-full px-3 py-1 text-xs font-semibold <%= colors[video.status] %>">
+  <%= video.status.titleize %>
+</span>

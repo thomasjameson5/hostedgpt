@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_22_053212) do
+ActiveRecord::Schema[7.1].define(version: 2026_09_18_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -410,6 +410,95 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_22_053212) do
     t.index ["run_id"], name: "index_steps_on_run_id"
   end
 
+  create_table "tiktok_ad_accounts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "tiktok_ads_credential_id", null: false
+    t.string "advertiser_id", null: false
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tiktok_ads_credential_id", "advertiser_id"], name: "index_tiktok_ad_accounts_on_credential_and_advertiser", unique: true
+    t.index ["tiktok_ads_credential_id"], name: "index_tiktok_ad_accounts_on_tiktok_ads_credential_id"
+    t.index ["user_id"], name: "index_tiktok_ad_accounts_on_user_id"
+  end
+
+  create_table "tiktok_ad_groups", force: :cascade do |t|
+    t.bigint "tiktok_campaign_id", null: false
+    t.string "name", null: false
+    t.string "placement_type", default: "PLACEMENT_TYPE_AUTOMATIC", null: false
+    t.string "optimization_goal", default: "LEAD_GENERATION", null: false
+    t.string "billing_event", default: "OCPM", null: false
+    t.decimal "bid_price", precision: 12, scale: 2
+    t.string "budget_mode", default: "BUDGET_MODE_DAY", null: false
+    t.decimal "budget", precision: 12, scale: 2
+    t.datetime "schedule_start_time"
+    t.datetime "schedule_end_time"
+    t.jsonb "location_ids", default: []
+    t.jsonb "age_groups", default: []
+    t.jsonb "genders", default: []
+    t.jsonb "languages", default: []
+    t.string "status", default: "draft", null: false
+    t.string "tiktok_adgroup_id"
+    t.text "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tiktok_campaign_id"], name: "index_tiktok_ad_groups_on_tiktok_campaign_id"
+  end
+
+  create_table "tiktok_ads", force: :cascade do |t|
+    t.bigint "tiktok_ad_group_id", null: false
+    t.bigint "tiktok_video_id", comment: "Nullable until the creative step of the campaign wizard picks a video"
+    t.string "name", null: false
+    t.string "ad_text"
+    t.string "call_to_action", default: "LEARN_MORE", null: false
+    t.string "identity_type", comment: "The TikTok 'card' - which account identity the ad is shown as coming from"
+    t.string "identity_id"
+    t.string "identity_display_name"
+    t.string "instant_form_id"
+    t.string "instant_form_name"
+    t.string "landing_page_url"
+    t.string "status", default: "draft", null: false
+    t.string "tiktok_ad_id"
+    t.text "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tiktok_ad_group_id"], name: "index_tiktok_ads_on_tiktok_ad_group_id"
+    t.index ["tiktok_video_id"], name: "index_tiktok_ads_on_tiktok_video_id"
+  end
+
+  create_table "tiktok_campaigns", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "tiktok_ad_account_id", null: false
+    t.string "name", null: false
+    t.string "objective_type", default: "LEAD_GENERATION", null: false
+    t.string "budget_mode", default: "BUDGET_MODE_DAY", null: false
+    t.decimal "budget", precision: 12, scale: 2
+    t.string "status", default: "draft", null: false, comment: "draft, launching, launched, failed"
+    t.string "tiktok_campaign_id"
+    t.text "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tiktok_ad_account_id"], name: "index_tiktok_campaigns_on_tiktok_ad_account_id"
+    t.index ["user_id"], name: "index_tiktok_campaigns_on_user_id"
+  end
+
+  create_table "tiktok_videos", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "tiktok_credential_id", null: false
+    t.text "caption"
+    t.string "overlay_text"
+    t.string "privacy_level", default: "SELF_ONLY", null: false, comment: "TikTok Content Posting API privacy_level. Unaudited apps are restricted to SELF_ONLY (private)."
+    t.string "status", default: "pending", null: false, comment: "pending, processing, publishing, posted, failed"
+    t.string "tiktok_publish_id"
+    t.string "tiktok_item_id", comment: "The published TikTok video/item id once posted"
+    t.string "tiktok_ad_video_id", comment: "The video_id returned by the Marketing API's ad creative asset upload, used to build ad creatives"
+    t.text "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tiktok_credential_id"], name: "index_tiktok_videos_on_tiktok_credential_id"
+    t.index ["user_id"], name: "index_tiktok_videos_on_user_id"
+  end
+
   create_table "tombstones", force: :cascade do |t|
     t.datetime "erected_at"
   end
@@ -460,5 +549,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_22_053212) do
   add_foreign_key "steps", "assistants"
   add_foreign_key "steps", "conversations"
   add_foreign_key "steps", "runs"
+  add_foreign_key "tiktok_ad_accounts", "credentials", column: "tiktok_ads_credential_id"
+  add_foreign_key "tiktok_ad_accounts", "users"
+  add_foreign_key "tiktok_ad_groups", "tiktok_campaigns"
+  add_foreign_key "tiktok_ads", "tiktok_ad_groups"
+  add_foreign_key "tiktok_ads", "tiktok_videos"
+  add_foreign_key "tiktok_campaigns", "tiktok_ad_accounts"
+  add_foreign_key "tiktok_campaigns", "users"
+  add_foreign_key "tiktok_videos", "credentials", column: "tiktok_credential_id"
+  add_foreign_key "tiktok_videos", "users"
   add_foreign_key "users", "messages", column: "last_cancelled_message_id"
 end

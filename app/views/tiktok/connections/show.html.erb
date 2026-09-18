@@ -1,0 +1,69 @@
+<h1 class="text-3xl">Connected TikTok accounts</h1>
+
+<p class="my-5 text-gray-600 dark:text-gray-300">
+  TikTok treats posting videos and running ads as two separate products, each with its own login.
+  Connect both to use the video and campaign tools.
+</p>
+
+<div class="my-8 p-5 border border-gray-300 dark:border-gray-600 rounded-lg">
+  <h2 class="text-xl font-bold mb-3">TikTok account (for posting videos)</h2>
+
+  <% if @content_credential %>
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="font-semibold">@<%= @content_credential.username || @content_credential.display_name %></p>
+        <p class="text-sm text-gray-500">Connected</p>
+      </div>
+      <%= button_to "Disconnect", tiktok_connections_content_path, method: :delete,
+        class: "font-bold border border-gray-400 rounded-lg py-2 px-4 cursor-pointer" %>
+    </div>
+  <% else %>
+    <p class="mb-3 text-gray-600 dark:text-gray-300">Not connected yet.</p>
+    <%= button_to "Connect TikTok account", tiktok_connections_content_authorize_path, method: :get,
+      class: "inline-block font-bold bg-gray-200 dark:bg-gray-900 border border-gray-400 rounded-lg py-3 px-5 cursor-pointer" %>
+  <% end %>
+</div>
+
+<div class="my-8 p-5 border border-gray-300 dark:border-gray-600 rounded-lg">
+  <h2 class="text-xl font-bold mb-3">TikTok Ads account (for campaigns)</h2>
+
+  <% if @ads_credential %>
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <p class="font-semibold"><%= @ads_credential.display_name %></p>
+        <p class="text-sm text-gray-500">Connected</p>
+      </div>
+      <div class="flex gap-2">
+        <%= button_to "Refresh ad accounts", tiktok_connections_sync_ad_accounts_path, method: :post,
+          class: "font-bold border border-gray-400 rounded-lg py-2 px-4 cursor-pointer" %>
+        <%= button_to "Disconnect", tiktok_connections_ads_path, method: :delete,
+          class: "font-bold border border-gray-400 rounded-lg py-2 px-4 cursor-pointer" %>
+      </div>
+    </div>
+
+    <% if @ad_accounts.present? %>
+      <table class="w-full table-auto border-b border-gray-300 dark:border-b-0">
+        <thead>
+          <tr class="bg-gray-200 dark:bg-gray-900">
+            <th>Ad account</th>
+            <th>Advertiser ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @ad_accounts.each do |account| %>
+            <tr class="<%= cycle("bg-gray-100 dark:bg-gray-600", "bg-white dark:bg-gray-900") %>">
+              <td><%= account.name %></td>
+              <td><%= account.advertiser_id %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="text-gray-500">No ad accounts found on this token yet - click "Refresh ad accounts".</p>
+    <% end %>
+  <% else %>
+    <p class="mb-3 text-gray-600 dark:text-gray-300">Not connected yet.</p>
+    <%= button_to "Connect TikTok Ads account", tiktok_connections_ads_authorize_path, method: :get,
+      class: "inline-block font-bold bg-gray-200 dark:bg-gray-900 border border-gray-400 rounded-lg py-3 px-5 cursor-pointer" %>
+  <% end %>
+</div>

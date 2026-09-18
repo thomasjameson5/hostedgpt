@@ -1,0 +1,96 @@
+<h1 class="text-3xl">Audience &amp; budget</h1>
+<%= render "tiktok/campaigns/steps", campaign: @campaign, current_step: :audience %>
+
+<% if @ad_group.errors.any? %>
+  <div class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3 mb-3">
+    <ul>
+      <% @ad_group.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: @ad_group, url: audience_tiktok_campaign_path(@campaign), method: :patch, class: "contents", local: true do |form| %>
+  <div class="my-5">
+    <%= form.label :name, "Ad group name" %>
+    <%= form.text_field :name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :placement_type %>
+    <%= form.select :placement_type, TiktokAdGroup::PLACEMENT_TYPES.map { |o| [o.titleize, o] }, {},
+      class: "block border border-gray-200 outline-none shadow rounded-md px-3 py-2 mt-2 w-full dark:text-black" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :billing_event %>
+    <%= form.select :billing_event, TiktokAdGroup::BILLING_EVENTS, {},
+      class: "block border border-gray-200 outline-none shadow rounded-md px-3 py-2 mt-2 w-full dark:text-black" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :budget_mode, "Ad group budget type" %>
+    <%= form.select :budget_mode, TiktokAdGroup::BUDGET_MODES.map { |o| [o.titleize, o] }, {},
+      class: "block border border-gray-200 outline-none shadow rounded-md px-3 py-2 mt-2 w-full dark:text-black" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :budget, "Ad group budget ($)" %>
+    <%= form.number_field :budget, step: "0.01", min: "0", class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :bid_price, "Bid price ($, optional)" %>
+    <%= form.number_field :bid_price, step: "0.01", min: "0", class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :schedule_start_time, "Start" %>
+    <%= form.datetime_field :schedule_start_time, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :schedule_end_time, "End (optional, otherwise runs continuously)" %>
+    <%= form.datetime_field :schedule_end_time, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
+  </div>
+
+  <div class="my-5">
+    <span class="block font-medium mb-2">Age</span>
+    <% %w[AGE_13_17 AGE_18_24 AGE_25_34 AGE_35_44 AGE_45_54 AGE_55_100].each do |age| %>
+      <label class="inline-flex items-center gap-1 mr-4">
+        <%= check_box_tag "tiktok_ad_group[age_groups][]", age, @ad_group.age_groups.include?(age), id: nil %>
+        <%= age.sub("AGE_", "").tr("_", "-") %>
+      </label>
+    <% end %>
+  </div>
+
+  <div class="my-5">
+    <span class="block font-medium mb-2">Gender</span>
+    <% %w[GENDER_MALE GENDER_FEMALE].each do |gender| %>
+      <label class="inline-flex items-center gap-1 mr-4">
+        <%= check_box_tag "tiktok_ad_group[genders][]", gender, @ad_group.genders.include?(gender), id: nil %>
+        <%= gender.sub("GENDER_", "").titleize %>
+      </label>
+    <% end %>
+    <p class="text-sm text-gray-500 mt-1">Leave both unchecked to target everyone.</p>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :location_ids_text, "Locations" %>
+    <%= form.text_field :location_ids_text, value: @ad_group.location_ids.join(", "),
+      class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
+    <p class="text-sm text-gray-500 mt-1">Comma-separated TikTok location IDs.</p>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :languages_text, "Languages (optional)" %>
+    <%= form.text_field :languages_text, value: @ad_group.languages.join(", "),
+      class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
+    <p class="text-sm text-gray-500 mt-1">Comma-separated TikTok language codes, e.g. en, es.</p>
+  </div>
+
+  <%= form.submit "Continue",
+    class: "inline-block font-bold bg-gray-200 dark:bg-gray-900 border border-gray-400 rounded-lg py-3 px-5 cursor-pointer",
+    data: { turbo_submits_with: "Saving..." } %>
+<% end %>

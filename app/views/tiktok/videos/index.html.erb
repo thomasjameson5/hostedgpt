@@ -1,0 +1,37 @@
+<h1 class="text-3xl">Videos</h1>
+
+<p class="my-8">
+  <%= link_to "Upload a video", new_tiktok_video_path,
+    class: "inline-block font-bold bg-gray-200 dark:bg-gray-900 border border-gray-400 rounded-lg py-3 px-5 cursor-pointer" %>
+</p>
+
+<% if @videos.empty? %>
+  <p class="my-8">You haven't uploaded any videos yet.</p>
+<% else %>
+  <table class="w-full table-auto border-b border-gray-300 dark:border-b-0">
+    <thead>
+      <tr class="bg-gray-200 dark:bg-gray-900">
+        <th>Caption</th>
+        <th>Status</th>
+        <th>Uploaded</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @videos.each do |video| %>
+        <tr class="<%= cycle("bg-gray-100 dark:bg-gray-600", "bg-white dark:bg-gray-900") %> cursor-pointer" data-href="<%= tiktok_video_path(video) %>">
+          <td><%= truncate(video.caption.presence || "(no caption)", length: 60) %></td>
+          <td><%= render "tiktok/videos/status_badge", video: video %></td>
+          <td><%= time_ago_in_words(video.created_at) %> ago</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <script>
+    document.addEventListener("turbo:load", () => {
+      document.querySelectorAll("table tr[data-href]").forEach(row => {
+        row.addEventListener("click", () => { window.location.href = row.dataset.href; });
+      });
+    });
+  </script>
+<% end %>

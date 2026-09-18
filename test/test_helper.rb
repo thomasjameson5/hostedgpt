@@ -52,7 +52,7 @@ module ActiveSupport
   class TestCase
     include Turbo::Broadcastable::TestHelper
     include ActiveJob::TestHelper
-    include OptionsHelpers, PostgresqlHelper, ViewHelpers, SDKHelpers
+    include OptionsHelpers, PostgresqlHelper, ViewHelpers, SDKHelpers, TiktokTestHelpers
 
     parallelize(workers: :number_of_processors)
     fixtures :all
