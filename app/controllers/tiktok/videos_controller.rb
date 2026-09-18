@@ -6,18 +6,13 @@ class Tiktok::VideosController < Tiktok::ApplicationController
   end
 
   def new
-    return redirect_missing_connection if Current.user.tiktok_credential.nil?
-
     @video = Current.user.tiktok_videos.build(privacy_level: "SELF_ONLY")
   end
 
   def create
     @video = Current.user.tiktok_videos.build(video_params)
-    @video.tiktok_credential = Current.user.tiktok_credential
 
-    if @video.tiktok_credential.nil?
-      redirect_missing_connection
-    elsif @video.save
+    if @video.save
       Tiktok::PublishVideoJob.perform_later(@video.id)
       redirect_to tiktok_video_path(@video), notice: "Uploading to TikTok..."
     else
@@ -41,9 +36,5 @@ class Tiktok::VideosController < Tiktok::ApplicationController
 
   def video_params
     params.require(:tiktok_video).permit(:file, :caption, :overlay_text, :privacy_level)
-  end
-
-  def redirect_missing_connection
-    redirect_to tiktok_connections_path, alert: "Connect a TikTok account first"
   end
 end

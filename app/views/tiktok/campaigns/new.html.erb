@@ -5,5 +5,5 @@
   <p class="mb-5 text-sm text-gray-500">Using the video you just uploaded as the ad creative.</p>
 <% end %>
 
-<%= render "tiktok/campaigns/settings_form", campaign: @campaign, ad_accounts: @ad_accounts,
+<%= render "tiktok/campaigns/settings_form", campaign: @campaign,
   url: tiktok_campaigns_path, method: :post, video_id: @video_id %>

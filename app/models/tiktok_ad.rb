@@ -7,12 +7,10 @@ class TiktokAd < ApplicationRecord
 
   validates :name, presence: true
   validates :call_to_action, inclusion: {in: CALL_TO_ACTIONS}
-  validates :identity_id, :identity_type, presence: true
   validates :instant_form_id, presence: true, if: -> { tiktok_ad_group&.tiktok_campaign&.objective_type == "LEAD_GENERATION" }
 
   def ready_to_launch?
     tiktok_video.present? && tiktok_video.file.attached? &&
-      identity_id.present? && identity_type.present? &&
       (instant_form_id.present? || tiktok_ad_group.tiktok_campaign.objective_type != "LEAD_GENERATION")
   end
 end

@@ -12,7 +12,6 @@
     <thead>
       <tr class="bg-gray-200 dark:bg-gray-900">
         <th>Name</th>
-        <th>Ad account</th>
         <th>Objective</th>
         <th>Status</th>
       </tr>
@@ -21,7 +20,6 @@
       <% @campaigns.each do |campaign| %>
         <tr class="<%= cycle("bg-gray-100 dark:bg-gray-600", "bg-white dark:bg-gray-900") %> cursor-pointer" data-href="<%= tiktok_campaign_path(campaign) %>">
           <td><%= campaign.name %></td>
-          <td><%= campaign.tiktok_ad_account.name %></td>
           <td><%= campaign.objective_type.titleize %></td>
           <td><%= render "tiktok/campaigns/status_badge", record: campaign %></td>
         </tr>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_09_18_000001) do
+ActiveRecord::Schema[7.1].define(version: 2026_09_18_135808) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -412,7 +412,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_18_000001) do
 
   create_table "tiktok_ad_accounts", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "tiktok_ads_credential_id", null: false
+    t.bigint "tiktok_ads_credential_id"
     t.string "advertiser_id", null: false
     t.string "name"
     t.datetime "created_at", null: false
@@ -442,6 +442,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_18_000001) do
     t.text "error_message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "age_min"
+    t.integer "age_max"
     t.index ["tiktok_campaign_id"], name: "index_tiktok_ad_groups_on_tiktok_campaign_id"
   end
 
@@ -468,7 +470,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_18_000001) do
 
   create_table "tiktok_campaigns", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "tiktok_ad_account_id", null: false
+    t.bigint "tiktok_ad_account_id"
     t.string "name", null: false
     t.string "objective_type", default: "LEAD_GENERATION", null: false
     t.string "budget_mode", default: "BUDGET_MODE_DAY", null: false
@@ -484,7 +486,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_18_000001) do
 
   create_table "tiktok_videos", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "tiktok_credential_id", null: false
+    t.bigint "tiktok_credential_id"
     t.text "caption"
     t.string "overlay_text"
     t.string "privacy_level", default: "SELF_ONLY", null: false, comment: "TikTok Content Posting API privacy_level. Unaudited apps are restricted to SELF_ONLY (private)."

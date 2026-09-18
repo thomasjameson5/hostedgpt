@@ -4,7 +4,7 @@ class TiktokCampaign < ApplicationRecord
   STATUSES = %w[draft launching launched failed]
 
   belongs_to :user
-  belongs_to :tiktok_ad_account
+  belongs_to :tiktok_ad_account, optional: true
 
   has_one :tiktok_ad_group, dependent: :destroy
 

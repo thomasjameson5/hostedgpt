@@ -7,13 +7,6 @@ class Tiktok::VideosControllerTest < ActionDispatch::IntegrationTest
     @user = users(:keith)
     login_as @user
     stub_features(tiktok_tools: true)
-    @credential = @user.credentials.create!(type: "TiktokCredential", external_id: "open_1", oauth_token: "t", oauth_refresh_token: "r", properties: {username: "keithtiktok"})
-  end
-
-  test "redirects to connect a TikTok account before uploading" do
-    @credential.destroy
-    get new_tiktok_video_url
-    assert_redirected_to tiktok_connections_url
   end
 
   test "uploading a video creates it and enqueues the publish job" do
@@ -31,24 +24,23 @@ class Tiktok::VideosControllerTest < ActionDispatch::IntegrationTest
     video = TiktokVideo.last
     assert_redirected_to tiktok_video_url(video)
     assert_equal @user, video.user
-    assert_equal @credential, video.tiktok_credential
     assert video.file.attached?
   end
 
   test "lists videos" do
-    create_tiktok_video!(user: @user, tiktok_credential: @credential, status: "posted")
+    create_tiktok_video!(user: @user, status: "posted")
     get tiktok_videos_url
     assert_response :success
   end
 
   test "shows the video's status" do
-    video = create_tiktok_video!(user: @user, tiktok_credential: @credential, status: "posted")
+    video = create_tiktok_video!(user: @user, status: "posted")
     get tiktok_video_url(video)
     assert_response :success
   end
 
   test "deletes a video" do
-    video = create_tiktok_video!(user: @user, tiktok_credential: @credential, status: "posted")
+    video = create_tiktok_video!(user: @user, status: "posted")
     assert_difference "TiktokVideo.count", -1 do
       delete tiktok_video_url(video)
     end

@@ -50,40 +50,11 @@
       class: "block border border-gray-200 outline-none shadow rounded-md px-3 py-2 mt-2 w-full dark:text-black" %>
   </div>
 
-  <div class="my-5">
-    <span class="block font-medium mb-2">Card <span class="font-normal text-gray-500">(the TikTok Identity your ad is shown as coming from)</span></span>
-    <% if @identities_error.present? %>
-      <p class="text-red-500 text-sm mb-2"><%= @identities_error %></p>
-    <% elsif @identities.empty? %>
-      <p class="text-gray-500 text-sm mb-2">No identities found on this ad account yet - create one in TikTok Ads Manager.</p>
-    <% else %>
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-        <% @identities.each do |identity| %>
-          <label class="flex items-center gap-2 border rounded-lg p-2 cursor-pointer <%= "border-blue-500 ring-2 ring-blue-300" if @ad.identity_id == identity["identity_id"] %>">
-            <%= radio_button_tag "tiktok_ad[identity_choice]", "#{identity["identity_id"]}|#{identity["identity_type"]}", @ad.identity_id == identity["identity_id"], id: nil %>
-            <% if identity["profile_image"].present? %>
-              <img src="<%= identity["profile_image"] %>" class="w-8 h-8 rounded-full" alt="">
-            <% end %>
-            <span class="text-sm"><%= identity["display_name"] %></span>
-          </label>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
-
   <% if @campaign.objective_type == "LEAD_GENERATION" %>
     <div class="my-5">
-      <span class="block font-medium mb-2">Instant Form</span>
-      <% if @instant_forms_error.present? %>
-        <p class="text-red-500 text-sm mb-2"><%= @instant_forms_error %></p>
-      <% elsif @instant_forms.empty? %>
-        <p class="text-gray-500 text-sm mb-2">No Instant Forms found - build one in TikTok Ads Manager first.</p>
-      <% else %>
-        <%= form.select :instant_form_id,
-          @instant_forms.map { |f| [f["form_name"] || f["page_name"], f["page_id"] || f["form_id"]] },
-          { include_blank: "Choose an Instant Form" },
-          class: "block border border-gray-200 outline-none shadow rounded-md px-3 py-2 mt-2 w-full dark:text-black" %>
-      <% end %>
+      <%= form.label :instant_form_id, "Instant Form ID" %>
+      <%= form.text_field :instant_form_id, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
+      <p class="text-sm text-gray-500 mt-1">The ID of an Instant Form you've already built in TikTok Ads Manager.</p>
     </div>
   <% end %>
 

@@ -38,13 +38,6 @@ Rails.application.routes.draw do
 
   namespace :tiktok do
     get "connections" => "connections#show", as: :connections
-    get "connections/content/authorize" => "connections#new_content", as: :connections_content_authorize
-    get "connections/content/callback" => "connections#callback_content", as: :connections_content_callback
-    delete "connections/content" => "connections#destroy_content", as: :connections_content
-    get "connections/ads/authorize" => "connections#new_ads", as: :connections_ads_authorize
-    get "connections/ads/callback" => "connections#callback_ads", as: :connections_ads_callback
-    delete "connections/ads" => "connections#destroy_ads", as: :connections_ads
-    post "connections/ad_accounts/sync" => "connections#sync_ad_accounts", as: :connections_sync_ad_accounts
 
     resources :videos, only: [:index, :new, :create, :show, :destroy]
 
