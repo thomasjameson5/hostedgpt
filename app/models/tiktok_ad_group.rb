@@ -14,6 +14,8 @@ class TiktokAdGroup < ApplicationRecord
   validates :budget_mode, inclusion: {in: BUDGET_MODES}
   validates :budget, numericality: {greater_than: 0}
   validates :schedule_start_time, presence: true
+  validates :age_min, numericality: {only_integer: true, greater_than_or_equal_to: 13}, allow_nil: true
+  validates :age_max, numericality: {only_integer: true, greater_than_or_equal_to: 13}, allow_nil: true
 
   def ready_to_launch?
     tiktok_ad.present? && tiktok_ad.ready_to_launch?

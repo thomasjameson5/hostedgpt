@@ -11,7 +11,6 @@
   <div class="border border-gray-300 dark:border-gray-600 rounded-lg p-4">
     <h2 class="font-bold mb-2">Campaign</h2>
     <dl class="text-sm space-y-1">
-      <div><dt class="inline font-semibold">Ad account:</dt> <dd class="inline"><%= @campaign.tiktok_ad_account.name %></dd></div>
       <div><dt class="inline font-semibold">Name:</dt> <dd class="inline"><%= @campaign.name %></dd></div>
       <div><dt class="inline font-semibold">Objective:</dt> <dd class="inline"><%= @campaign.objective_type.titleize %></dd></div>
       <div><dt class="inline font-semibold">Budget:</dt> <dd class="inline"><%= number_to_currency(@campaign.budget) %> (<%= @campaign.budget_mode.titleize %>)</dd></div>
@@ -24,7 +23,7 @@
     <dl class="text-sm space-y-1">
       <div><dt class="inline font-semibold">Ad group budget:</dt> <dd class="inline"><%= number_to_currency(@ad_group.budget) %></dd></div>
       <div><dt class="inline font-semibold">Starts:</dt> <dd class="inline"><%= @ad_group.schedule_start_time&.to_formatted_s(:long) || "not set" %></dd></div>
-      <div><dt class="inline font-semibold">Ages:</dt> <dd class="inline"><%= @ad_group.age_groups.presence&.join(", ") || "all" %></dd></div>
+      <div><dt class="inline font-semibold">Ages:</dt> <dd class="inline"><%= [@ad_group.age_min, @ad_group.age_max].compact.presence&.join("-") || "all" %></dd></div>
       <div><dt class="inline font-semibold">Gender:</dt> <dd class="inline"><%= @ad_group.genders.presence&.join(", ") || "all" %></dd></div>
       <div><dt class="inline font-semibold">Locations:</dt> <dd class="inline"><%= @ad_group.location_ids.presence&.join(", ") || "not set" %></dd></div>
     </dl>
@@ -37,9 +36,8 @@
       <div><dt class="inline font-semibold">Video:</dt> <dd class="inline"><%= @ad.tiktok_video ? "attached" : "not selected" %></dd></div>
       <div><dt class="inline font-semibold">Ad text:</dt> <dd class="inline"><%= @ad.ad_text.presence || "not set" %></dd></div>
       <div><dt class="inline font-semibold">Call to action:</dt> <dd class="inline"><%= @ad.call_to_action.titleize %></dd></div>
-      <div><dt class="inline font-semibold">Card:</dt> <dd class="inline"><%= @ad.identity_display_name.presence || @ad.identity_id.presence || "not selected" %></dd></div>
       <% if @campaign.objective_type == "LEAD_GENERATION" %>
-        <div><dt class="inline font-semibold">Instant Form:</dt> <dd class="inline"><%= @ad.instant_form_name.presence || @ad.instant_form_id.presence || "not selected" %></dd></div>
+        <div><dt class="inline font-semibold">Instant Form:</dt> <dd class="inline"><%= @ad.instant_form_id.presence || "not selected" %></dd></div>
       <% end %>
     </dl>
     <%= link_to "Edit", creative_tiktok_campaign_path(@campaign), class: "text-sm underline text-blue-600 mt-2 inline-block" %>

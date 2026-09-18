@@ -12,12 +12,6 @@
   <%= hidden_field_tag :video_id, video_id if video_id.present? %>
 
   <div class="my-5">
-    <%= form.label :tiktok_ad_account_id, "TikTok Ads account" %>
-    <%= form.collection_select :tiktok_ad_account_id, ad_accounts, :id, :name, {},
-      class: "block border border-gray-200 outline-none shadow rounded-md px-3 py-2 mt-2 w-full dark:text-black" %>
-  </div>
-
-  <div class="my-5">
     <%= form.label :name, "Campaign name" %>
     <%= form.text_field :name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
   </div>

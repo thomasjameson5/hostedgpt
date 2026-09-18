@@ -55,14 +55,15 @@
     <%= form.datetime_field :schedule_end_time, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
   </div>
 
-  <div class="my-5">
-    <span class="block font-medium mb-2">Age</span>
-    <% %w[AGE_13_17 AGE_18_24 AGE_25_34 AGE_35_44 AGE_45_54 AGE_55_100].each do |age| %>
-      <label class="inline-flex items-center gap-1 mr-4">
-        <%= check_box_tag "tiktok_ad_group[age_groups][]", age, @ad_group.age_groups.include?(age), id: nil %>
-        <%= age.sub("AGE_", "").tr("_", "-") %>
-      </label>
-    <% end %>
+  <div class="my-5 grid grid-cols-2 gap-3">
+    <div>
+      <%= form.label :age_min, "Min age (optional)" %>
+      <%= form.number_field :age_min, min: 13, max: 65, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
+    </div>
+    <div>
+      <%= form.label :age_max, "Max age (optional)" %>
+      <%= form.number_field :age_max, min: 13, max: 65, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
+    </div>
   </div>
 
   <div class="my-5">
@@ -80,7 +81,7 @@
     <%= form.label :location_ids_text, "Locations" %>
     <%= form.text_field :location_ids_text, value: @ad_group.location_ids.join(", "),
       class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full dark:text-black" %>
-    <p class="text-sm text-gray-500 mt-1">Comma-separated TikTok location IDs.</p>
+    <p class="text-sm text-gray-500 mt-1">Comma-separated ISO country codes, e.g. US, GB.</p>
   </div>
 
   <div class="my-5">
